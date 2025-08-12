@@ -50,4 +50,28 @@ class Solution:
 # [(i - prev - 1) - 1 ]//2, ans = ans + (i - prev - 2)//2
 # ans初始值为0，这个很好理解，但是prev初始值应该是多少？如果i=0时，就已经有一朵了。
 # 初始值也要符合通用公式: 0 - prev - 2 // 2 = 0, prev = -2，反向推导出prev = -2
-# 如果i=0没有一朵花，i = 1或者i = 2时是第一朵，
+# 如果i=0没有一朵花，i = 1是第一朵：1-(-2)-2//2=0, i=2是第一朵:2-(-2)-2//2=1,符合
+# 再考虑最后结尾，从末尾到最后一个1，例如.....1 0 0 0后面还可以再种一个
+# 这个时候间距是：[len(flowerbed)-1] - i//2, len(flowerbed)-1就是最后一个的序号了，减去i，实际是最后一段全是0的间距，这里就直接//2就可以了
+# 即：考虑前面的全部，和最后一部分特殊的地方
+# Count the maximum number of flowers that can be planted in each empty segment → sum them up → check if the total is at least n.
+# ans: total number of flowers that can be planted.
+# prev: the index of the last position that already has a flower.
+# When encountering a 1 (existing flower):
+# Calculate the gap between this flower and the previous one: i - prev - 1 → this is the number of empty spots.
+# You need to leave one spot empty for adjacency rules, then divide by 2 to get the max flowers that can be planted in that gap.
+# Example: 3 empty spots → (3 - 1) // 2 = 1 (can plant 1 flower)
+# 2 empty spots → (2 - 1) // 2 = 0 (can’t plant any).
+# Formula: [(i - prev - 1) - 1] // 2 → simplified to (i - prev - 2) // 2.
+# Accumulate: ans += (i - prev - 2) // 2.
+# ans starts at 0 (obvious), but what about prev?
+# It must work with the general formula even if the first flower is at position i = 0.
+# For i = 0 with a flower: (0 - prev - 2) // 2 = 0 → gives prev = -2.
+# This value also works for other cases:
+# If first flower at i = 1: (1 - (-2) - 2) // 2 = 0
+# If first flower at i = 2: (2 - (-2) - 2) // 2 = 1.
+# Then handle the last segment after the final flower:
+# From the last 1 to the end of the array, e.g., ... 1 0 0 0 → you can still plant in the trailing empty spots.
+# The gap length is (len(flowerbed) - 1) - i, where i is the index of the last flower.
+# This gap can directly be divided by 2: (len(flowerbed) - last_flower_index - 1) // 2.
+# So overall: Count all middle segments using the formula. Add the last trailing segment separately.
